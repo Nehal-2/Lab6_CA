@@ -33,6 +33,7 @@ module inst_mem #(
     
     assign inst = imem[addr[ADDR_WIDTH-1:2]]; // word-alligned
     
-    initial $readmemh("/home/it/ComputerArchitecture/machine.hex", imem);
+//    initial $readmemh("/home/it/ComputerArchitecture/machine.hex", imem);
+    initial $readmemh("/home/it/ComputerArchitecture/datapath_test.hex", imem);
     
 endmodule

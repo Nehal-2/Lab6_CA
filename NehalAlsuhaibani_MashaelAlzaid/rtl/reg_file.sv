@@ -26,9 +26,9 @@ module reg_file #(
         input logic clk,
         input logic reset_n,
         input logic reg_write,
-        input logic [$clog2(WIDTH)-1:0] raddr1,
-        input logic [$clog2(WIDTH)-1:0] raddr2,
-        input logic [$clog2(WIDTH)-1:0] waddr,
+        input logic [$clog2(WIDTH):0] raddr1,
+        input logic [$clog2(WIDTH):0] raddr2,
+        input logic [$clog2(WIDTH):0] waddr,
         input logic [WIDTH-1:0] wdata,
         output logic [WIDTH-1:0] rdata1,
         output logic [WIDTH-1:0] rdata2
@@ -44,6 +44,8 @@ module reg_file #(
             end
         else if (reg_write)
             x[waddr] <= wdata;
+//        else
+//            x <= x;
     end
     
     always_comb begin
