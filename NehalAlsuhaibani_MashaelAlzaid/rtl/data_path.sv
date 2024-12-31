@@ -1,26 +1,9 @@
 `timescale 1ns / 1ps
-//////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date: 12/25/2024 03:17:07 PM
-// Design Name: 
-// Module Name: data_path
-// Project Name: 
-// Target Devices: 
-// Tool Versions: 
-// Description: 
-// 
-// Dependencies: 
-// 
-// Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
-// 
-//////////////////////////////////////////////////////////////////////////////////
 
 
-module data_path(
+module data_path#(
+    parameter WIDTH = 32
+)(
     input logic clk,
     input logic reset_n,
     input logic reg_write,
@@ -28,10 +11,10 @@ module data_path(
     input logic [3:0] alu_ctrl,
     input logic branch,
     input logic mem_write,
-    input logic memtoreg
-    
+    input logic memtoreg,
+    output logic [WIDTH-1:0] instruction// Dec 29 addition
     );
-    localparam WIDTH = 32;
+   // localparam WIDTH = 32;
     localparam INST_DEPTH = 256;
     localparam DATA_DEPTH = 1024;
     
@@ -57,15 +40,18 @@ module data_path(
         .addr(current_pc), 
         .inst(inst)
     );
-    
+    assign instruction = inst; // Dec 30 addition
     // REGISTER FILE
-    logic [$clog2(WIDTH):0] rs1, rs2, rd;
+    logic [$clog2(WIDTH)-1:0] rs1, rs2, rd;
     logic [WIDTH-1:0] reg_rdata1, reg_rdata2, reg_wdata;
     
-    assign rs1 = inst[19:15];
-    assign rs2 = inst[24:20];
-    assign rd = inst[11:7];
+    assign rs1 = instruction[19:15];
+    assign rs2 = instruction[24:20];
+    assign rd = instruction[11:7];
     
+    
+        assign reg_wdata = memtoreg ? mem_rdata : alu_result; //replaced memtoreg with reg_write
+
     reg_file #(.WIDTH(WIDTH)) reg_file_inst(
         .clk(clk),
         .reset_n(reset_n),
@@ -114,7 +100,6 @@ module data_path(
         .rdata(mem_rdata)
     ); 
     
-    assign reg_wdata = memtoreg ? mem_rdata : alu_result;
     
     // JUMP LOGIC
     logic [WIDTH-1:0] pc_jump;

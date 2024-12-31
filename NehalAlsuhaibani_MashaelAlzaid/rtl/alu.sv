@@ -1,23 +1,4 @@
 `timescale 1ns / 1ps
-//////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date: 12/24/2024 03:11:01 PM
-// Design Name: 
-// Module Name: alu
-// Project Name: 
-// Target Devices: 
-// Tool Versions: 
-// Description: 
-// 
-// Dependencies: 
-// 
-// Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
-// 
-//////////////////////////////////////////////////////////////////////////////////
 
 
 module alu #(
@@ -42,7 +23,15 @@ module alu #(
             4'b1101: alu_result = $signed(op1) >>> op2; // SRA
             4'b0010: alu_result = ($signed(op1) < $signed(op2)) ? 1 : 0; // SLT
             4'b0011: alu_result = (op1 < op2) ? 1 : 0; // SLTU
-            default: alu_result = {WIDTH{1'b0}};
+             // Immediate operations
+            4'b1010: alu_result = op1 + op2; // ADDI (Add Immediate) -> ADD operation
+            4'b1011: alu_result = ($signed(op1) < $signed(op2)) ? 1 : 0; // SLTI (Set Less Than Immediate)
+            4'b1100: alu_result = (op1 < op2) ? 1 : 0; // SLTIU (Set Less Than Immediate Unsigned)
+            4'b1101: alu_result = op1 ^ op2; // XORI (XOR Immediate)
+            4'b1110: alu_result = op1 | op2; // ORI (OR Immediate)
+            4'b1111: alu_result = op1 & op2; // ANDI (AND Immediate)
+            
+             default: alu_result = {WIDTH{1'b0}};
         endcase
     end
     

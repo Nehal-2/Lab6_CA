@@ -32,6 +32,24 @@ module data_mem #(
         output logic [WIDTH-1:0] rdata
     );
     
+   logic [3:0] func3= addr[14:12];
+   logic func7 = addr[30];
+
+//load  block  
+//input addr_lsb = addr[3:0];
+// store block
+//module store_mem(
+//    input logic [31:0] memory_word,
+//    input logic [3:0] addr_lsb,
+//    input logic [2:0] funct3,
+//    input logic .wEn(mem_write),
+//    input logic [31:0] addre,
+//    output logic [31:0] dmem [0:1023]
+//);
+
+
+//memory block
+    
     logic [WIDTH-1:0] dmem [0:DEPTH-1]; 
     
     assign rdata = dmem[addr[WIDTH-1:2]]; // word-aligned
@@ -43,5 +61,16 @@ module data_mem #(
         end else if (mem_write)
             dmem[addr[WIDTH-1:2]] <= wdata; // word-aligned
     end
+ // load block
+ 
+  
+//  load_mem LM(
+//.memory_word(dmem)
+//, .addr_lsb(addr_lsb)
+//,input logic  [2:0] funct3 //?? wheres the instruction?
+//,.load_data(???  /// how is the connection should be?
+
+//);
+    
     
 endmodule

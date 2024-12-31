@@ -26,30 +26,29 @@ module reg_file #(
         input logic clk,
         input logic reset_n,
         input logic reg_write,
-        input logic [$clog2(WIDTH):0] raddr1,
-        input logic [$clog2(WIDTH):0] raddr2,
-        input logic [$clog2(WIDTH):0] waddr,
+        input logic [$clog2(WIDTH)-1:0] raddr1,// subtracted -1 Dec 30
+        input logic [$clog2(WIDTH)-1:0] raddr2,// subtracted -1 Dec 30
+        input logic [$clog2(WIDTH)-1:0] waddr,// subtracted -1 Dec 30
         input logic [WIDTH-1:0] wdata,
         output logic [WIDTH-1:0] rdata1,
         output logic [WIDTH-1:0] rdata2
 
     );
     
-    logic [WIDTH-1:0] x [0:WIDTH-1];
+    logic [WIDTH-1:0] x [0: WIDTH-1]; 
     
-    always_ff @(posedge clk, negedge reset_n) begin
+    always_ff @(posedge clk,  negedge reset_n) begin //negedge
         if (!reset_n)
-            for (int i = 0; i < WIDTH; i++) begin
+            for (int i = 0; i < WIDTH; i++) begin 
                 x[i] <= 0;
             end
-        else if (reg_write)
+        else if (reg_write && waddr != 0 )  //Dec 30 replaced reg_write
             x[waddr] <= wdata;
-//        else
-//            x <= x;
-    end
+    
+            x[0] <= 0; end
     
     always_comb begin
-        x[0] = 0;
+      //  x[0] = 0;
         rdata1 = x[raddr1];
         rdata2 = x[raddr2];
     end
